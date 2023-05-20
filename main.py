@@ -49,4 +49,4 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
