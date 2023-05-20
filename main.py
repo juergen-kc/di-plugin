@@ -22,7 +22,7 @@ async def get_directory_insights_api_key() -> str:
         str: The API key as a string.
     """
     # Replace this with the actual API key retrieval method
-    return "2223d06e74650b3201529ac99e2d023039f91e01"
+    return "API_KEY_HERE"
 
 @app.post("/chat")
 async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_key)):
