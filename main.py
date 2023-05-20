@@ -4,6 +4,7 @@ main.py: A FastAPI app to create a ChatGPT plugin that queries with JC's Directo
 
 import httpx
 from fastapi import FastAPI, Depends
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -22,7 +23,7 @@ async def get_directory_insights_api_key() -> str:
         str: The API key as a string.
     """
     # Replace this with the actual API key retrieval method
-    return "API_KEY_HERE"
+    return "api key here"
 
 @app.post("/chat")
 async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_key)):
@@ -47,6 +48,16 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
             "error": "Failed to fetch data from JumpCloud's Directory Insights API"
         }
 
+@app.get("/.well-known/ai-plugin.json")
+async def serve_ai_plugin_json():
+    """
+    Serve the ai-plugin.json file located in the .well-known folder.
+
+    Returns:
+        FileResponse: The ai-plugin.json file as a FileResponse with media type application/json.
+    """
+    return FileResponse(".well-known/ai-plugin.json", media_type="application/json")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
