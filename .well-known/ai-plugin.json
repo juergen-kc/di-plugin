@@ -1,15 +1,15 @@
 {
     "schema_version": "v1",
-    "name_for_model": "JumpCloud Directory Insights API",
-    "name_for_human": "JumpCloud Directory Insights API",
-    "description_for_model": "JumpCloud Directory Insights API",
-    "description_for_human": "JumpCloud Directory Insights API",
+    "name_for_model": "DirectoryInsightsAPI",
+    "name_for_human": "Ask Directory Insights API",
+    "description_for_model": "Query Directory Insights API",
+    "description_for_human": "Query Directory Insights API",
     "auth": {
       "type": "none"
     },
     "api": {
       "type": "openapi",
-      "url": "openapi.yaml",
+      "url": "https://juergen-kc-refactored-umbrella-r445qrp9g69h59vv-8000.preview.app.github.dev/openapi.yaml",
       "has_user_authentication": false
     },
     "logo_url": "logo.png",
