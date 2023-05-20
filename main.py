@@ -1,34 +1,27 @@
-import requests
-from openai import api
+import httpx
+from fastapi import FastAPI, Depends
+from pydantic import BaseModel
 
-class JumpCloudPlugin(api.Plugin):
-    def handle_message(self, message: api.Message) -> api.Response:
-        # Extracting the command from the message
-        command = message.content.get('command')
-        
-        # Check if command is defined, if not return an error message
-        if not command:
-            return api.Response.create(error="Command not defined")
+app = FastAPI()
 
-        # Define JumpCloud's API endpoint
-        api_endpoint = "https://console.jumpcloud.com/api/insights/v1"
+class Query(BaseModel):
+    question: str
 
-        # Define your JumpCloud API Key
-        api_key = "Your_API_Key"
+async def get_directory_insights_api_key() -> str:
+    # Replace this with the actual API key retrieval method
+    return "2223d06e74650b3201529ac99e2d023039f91e01"
 
-        # Define the headers for the API request
-        headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "x-api-key": api_key
-        }
+@app.post("/chat")
+async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_key)):
+    url = "https://console.jumpcloud.com/api/insights/directory"
+    headers = {"x-api-key": api_key}
+    response = await httpx.post(url, json=query.dict(), headers=headers)
 
-        # Make the API request
-        response = requests.get(f"{api_endpoint}/{command}", headers=headers)
-        
-        # Check if the request was successful, if not return an error message
-        if response.status_code != 200:
-            return api.Response.create(error="API request failed")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"error": "Failed to fetch data from JumpCloud's Directory Insights API"}
 
-        # Return the data from the API request
-        return api.Response.create(content=response.json())
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
