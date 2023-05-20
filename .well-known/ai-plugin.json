@@ -9,7 +9,7 @@
     },
     "api": {
       "type": "openapi",
-      "url": "https://juergen-kc-sturdy-journey-r445qrp97j93p7vr-8000.preview.app.github.dev/openapi.yaml",
+      "url": "openapi.yaml",
       "has_user_authentication": false
     },
     "logo_url": "https://askup-plugin.sung.devstage.ai/.well-known/askup_logo.png",
