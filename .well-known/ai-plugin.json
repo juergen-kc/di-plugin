@@ -9,10 +9,10 @@
     },
     "api": {
       "type": "openapi",
-      "url": "openapi.yaml",
+      "url": "/openapi.yaml",
       "has_user_authentication": false
     },
-    "logo_url": "https://askup-plugin.sung.devstage.ai/.well-known/askup_logo.png",
+    "logo_url": "logo.png",
     "contact_email": "john@doe.com", 
     "legal_info_url": "https://di.ai"
   }
