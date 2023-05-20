@@ -1,3 +1,7 @@
+"""
+main.py: A FastAPI app to create a ChatGPT plugin that queries with JC's Directory Insights.
+"""
+
 import httpx
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
@@ -5,14 +9,33 @@ from pydantic import BaseModel
 app = FastAPI()
 
 class Query(BaseModel):
+    """
+    A Pydantic model representing a query containing a question.
+    """
     question: str
 
 async def get_directory_insights_api_key() -> str:
+    """
+    Retrieve the API key for JumpCloud's Directory Insights API.
+    
+    Returns:
+        str: The API key as a string.
+    """
     # Replace this with the actual API key retrieval method
     return "2223d06e74650b3201529ac99e2d023039f91e01"
 
 @app.post("/chat")
 async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_key)):
+    """
+    Process a chat query by interacting with JumpCloud's Directory Insights API.
+
+    Args:
+        query (Query): A Pydantic model containing the question.
+        api_key (str): The API key for JumpCloud's Directory Insights API.
+
+    Returns:
+        dict: The response from JumpCloud's Directory Insights API or an error message.
+    """
     url = "https://console.jumpcloud.com/api/insights/directory"
     headers = {"x-api-key": api_key}
     response = await httpx.post(url, json=query.dict(), headers=headers)
@@ -20,7 +43,9 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
     if response.status_code == 200:
         return response.json()
     else:
-        return {"error": "Failed to fetch data from JumpCloud's Directory Insights API"}
+        return {
+            "error": "Failed to fetch data from JumpCloud's Directory Insights API"
+        }
 
 if __name__ == "__main__":
     import uvicorn
