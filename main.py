@@ -4,10 +4,20 @@ main.py: A FastAPI app to create a ChatGPT plugin that queries with JC's Directo
 
 import httpx
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can specify a list of allowed origins instead of using a wildcard
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Query(BaseModel):
     """
@@ -23,7 +33,7 @@ async def get_directory_insights_api_key() -> str:
         str: The API key as a string.
     """
     # Replace this with the actual API key retrieval method
-    return "2223d06e74650b3201529ac99e2d023039f91e01"
+    return "YOUR_API_KEY"
 
 @app.post("/chat")
 async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_key)):
@@ -39,7 +49,9 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
     """
     url = "https://console.jumpcloud.com/api/insights/directory"
     headers = {"x-api-key": api_key}
-    response = await httpx.post(url, json=query.dict(), headers=headers)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, json=query.dict(), headers=headers)
 
     if response.status_code == 200:
         return response.json()
