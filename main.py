@@ -3,7 +3,7 @@ main.py: A FastAPI app to create a ChatGPT plugin that queries with JC's Directo
 """
 
 import httpx
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -13,7 +13,7 @@ app = FastAPI()
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # You can specify a list of allowed origins instead of using a wildcard
+    allow_origins=["https://chat.openai.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -60,8 +60,10 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
             "error": "Failed to fetch data from JumpCloud's Directory Insights API"
         }
 
+# ...
+
 @app.get("/.well-known/ai-plugin.json")
-async def serve_ai_plugin_json():
+async def serve_ai_plugin_json_get():
     """
     Serve the ai-plugin.json file located in the .well-known folder.
 
@@ -69,6 +71,16 @@ async def serve_ai_plugin_json():
         FileResponse: The ai-plugin.json file as a FileResponse with media type application/json.
     """
     return FileResponse(".well-known/ai-plugin.json", media_type="application/json")
+
+@app.options("/.well-known/ai-plugin.json")
+async def serve_ai_plugin_json_options():
+    """
+    Handle OPTIONS requests for the ai-plugin.json file.
+
+    Returns:
+        Response: An empty response with a 204 status code.
+    """
+    return Response(status_code=204)
 
 if __name__ == "__main__":
     import uvicorn

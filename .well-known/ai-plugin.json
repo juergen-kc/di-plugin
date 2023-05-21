@@ -9,7 +9,7 @@
     },
     "api": {
       "type": "openapi",
-      "url": "/openapi.yaml",
+      "url": "https://juergen-kc-miniature-bassoon-7vvj6rpqp5w3rjq-5000.preview.app.github.dev/openapi.yaml",
       "has_user_authentication": false
     },
     "logo_url": "logo.png",
