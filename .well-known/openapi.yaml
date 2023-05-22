@@ -90,7 +90,7 @@ info:
     email: support@jumpcloud.com
   version: 1.0-oas3
 servers:
-  - url: https://api.jumpcloud.com/insights/directory/v1
+  - url: https://juergen-kc-miniature-bassoon-7vvj6rpqp5w3rjq-8000.preview.app.github.dev
 tags:
   - name: EventDistinctQuery
   - name: EventIntervalQuery
@@ -104,14 +104,6 @@ paths:
       summary: Query Events
       description: >-
         Query the API for Directory Insights events
-
-        #### Sample Request
-
-        ```
-
-        curl -X POST 'https://api.jumpcloud.com/insights/directory/v1/events' -H 'Content-Type: application/json' -H 'x-api-key: REPLACE_KEY_VALUE' --data '{"service": ["all"], "start_time": "2021-07-14T23:00:00Z", "end_time": "2021-07-28T14:00:00Z", "sort": "DESC", "fields": ["timestamp", "event_type", "initiated_by", "success", "client_ip", "provider", "organization"]}'
-
-        ```
       operationId: directoryInsights_eventsPost
       requestBody:
         $ref: "#/components/requestBodies/EventQuery"
@@ -216,14 +208,6 @@ paths:
       summary: Count Events
       description: >-
         Query the API for a count of matching events
-
-        #### Sample Request
-
-        ```
-
-        curl -X POST 'https://api.jumpcloud.com/insights/directory/v1/events/count' -H 'Content-Type: application/json' -H 'x-api-key: REPLACE_KEY_VALUE' --data '{"service": ["all"], "start_time": "2021-07-14T23:00:00Z", "end_time": "2021-07-28T14:00:00Z", "sort": "DESC", "fields": ["timestamp", "event_type", "initiated_by", "success", "client_ip", "provider", "organization"]}'
-
-        ```
       operationId: directoryInsights_eventsCountPost
       requestBody:
         $ref: "#/components/requestBodies/EventQuery"

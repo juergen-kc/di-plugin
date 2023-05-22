@@ -47,11 +47,15 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
     Returns:
         dict: The response from JumpCloud's Directory Insights API or an error message.
     """
-    url = "https://console.jumpcloud.com/api/insights/directory"
+    url = "https://api.jumpcloud.com/insights/directory/v1/events"
     headers = {"x-api-key": api_key}
+    data = {
+        "service": ["all"],
+        "start_time": query.question
+    }
 
     async with httpx.AsyncClient() as client:
-        response = await client.post(url, json=query.dict(), headers=headers)
+        response = await client.post(url, json=data, headers=headers)
 
     if response.status_code == 200:
         return response.json()
@@ -60,9 +64,7 @@ async def chat(query: Query, api_key: str = Depends(get_directory_insights_api_k
     elif response.status_code == 403:
         return {"error": "Forbidden access to JumpCloud's Directory Insights API"}
     else:
-        return {"error": f"Failed to fetch data API (Status code: {response.status_code})"}
-
-# ...
+        return {"error": f"Failed to fetch data from DI API (Status code: {response.status_code})"}
 
 @app.get("/.well-known/ai-plugin.json")
 async def serve_ai_plugin_json_get():
@@ -72,7 +74,7 @@ async def serve_ai_plugin_json_get():
     Returns:
         FileResponse: The ai-plugin.json file as a FileResponse with media type application/json.
     """
-    return FileResponse(".well-known/ai-plugin.json", media_type="application/json")
+    return FileResponse("./.well-known/ai-plugin.json", media_type="application/json")
 
 @app.options("/.well-known/ai-plugin.json")
 async def serve_ai_plugin_json_options():
@@ -84,6 +86,17 @@ async def serve_ai_plugin_json_options():
     """
     return Response(status_code=204)
 
-if __name__ == "__main__": # type: ignore
+@app.get("/.well-known/openapi.yaml")
+async def serve_openapi_yaml_get():
+    """
+    Serve the openapi.yaml file located in the .well-known folder.
+
+    Returns:
+        FileResponse: The openapi.yaml file as a FileResponse with media type application/x-yaml.
+    """
+    return FileResponse("./.well-known/openapi.yaml", media_type="application/x-yaml")
+
+if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
